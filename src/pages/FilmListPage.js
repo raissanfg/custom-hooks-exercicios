@@ -1,31 +1,18 @@
-import { useState, useEffect } from "react";
-import { BASE_URL } from "../constants/constants";
-import axios from "axios";
 import {Title,PostContainer } from './style'
 import { Card } from '../components/Card/Card'
+import useRequestData from '../Hooks/useRequestData'
 
 
 const  FilmListPage = () => {
-  const [filmsList, setFilmsList] = useState([]);
-
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/films`)
-      .then((response) => {
-        setFilmsList(response.data.results);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  },[]);
+ const [filmes, isLoading] = useRequestData("/films")
 
   return (
     <div>
       <Title>Título dos filmes</Title>
       <PostContainer>
-
-      {filmsList.map((film) => {
+        
+        {isLoading && <p> CARREGANDO ...</p>}
+        {!isLoading && filmes.map((film) => {
         return(
           <Card 
           key={film.title} 
@@ -35,6 +22,8 @@ const  FilmListPage = () => {
           textColor={'#ffffff'}
           />)
       })}
+
+      
       </PostContainer>
     </div>
   );
